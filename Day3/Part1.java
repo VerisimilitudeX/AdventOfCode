@@ -11,8 +11,8 @@ public class Part1 {
 
         // Creating a Scanner object
         Scanner sc = new Scanner(file);
-
         int sumMutualLetterPriorities = 0;
+        
         // Appending each line to the buffer
         while (sc.hasNext()) {
             String rucksack = sc.nextLine();
