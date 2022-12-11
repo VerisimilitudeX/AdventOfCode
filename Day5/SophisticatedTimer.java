@@ -35,5 +35,7 @@ public class SophisticatedTimer {
                 e.printStackTrace();
             }
         }
+
+        sc.close();
     }
 }
