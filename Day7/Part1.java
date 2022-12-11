@@ -1,16 +1,14 @@
 /**
  * --- Day 7: No Space Left On Device ---
  *
- * Outline:
- *
- * 1. Read in the input file and store it in an ArrayList
- * 2. Parse the ArrayList and store the lines in a TreeMap
- * 3. Iterate over the TreeMap and find the top level directories
- * 4. Iterate over the TreeMap and find the files
- * 5. Iterate over the TreeMap and find the files that are first children
- * 6. Iterate over the TreeMap and find the files that are not first children
- *
- */
+ * Goals (in the form of an outline based on the current code):
+ * 
+ * 1. Get input file
+ * 2. Parse input file for commands, directories, and files
+ * 3. Find the top level directories
+ * 4. Find the files and add them to the appropriate directories
+ * 
+*/
 
 package Day7;
 
