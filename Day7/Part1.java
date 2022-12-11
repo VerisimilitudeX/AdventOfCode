@@ -26,8 +26,7 @@ public class Part1 {
     private static TreeMap<Integer, FileType> files = new TreeMap<>();
 
     public static void main(String[] args) throws FileNotFoundException {
-        File file = getFile();
-        parseLines(file);
+        parseLines(getFile());
         setTopLevelDirectories();
         setFiles();
         addFirstChildrenToDirectories();
@@ -166,6 +165,12 @@ public class Part1 {
         }
     }
 
+    /**
+     * This function sets the files. It sets the file names for the various files.
+     * It then reads the files and stores the data in the various data structures.
+     * It also sets the file names for the various output files.
+     * 
+     */
     private static void setFiles() {
         // Iterate over the files in the TreeMap using the line numbers as the keys
         for (int lineNumber : files.keySet()) {
@@ -174,8 +179,7 @@ public class Part1 {
                     commandLines,
                     files);
             // validate
-            // System.out.println("File: " + files.get(lineNumber).filename + " Size: " +
-            // files.get(lineNumber).size);
+            System.out.println("File: " + files.get(lineNumber).filename + " Size: " + files.get(lineNumber).size);
             if (firstFileFound) {
                 // do the same thing as for directories below, but for the files
                 boolean fileFound = true;
@@ -186,8 +190,8 @@ public class Part1 {
                         files.get(fileLineNumber + 1).isFirstChild = true;
                         fileLineNumber++;
                         // validate
-                        // System.out.println("File: " + files.get(fileLineNumber).filename + " Size: "
-                        // + files.get(fileLineNumber).size);
+                        System.out.println("File: " + files.get(fileLineNumber).filename + " Size: "
+                                + files.get(fileLineNumber).size);
                         int filePreviousLineNum = fileLineNumber - 1;
                         boolean check = findParentDirectoryAndAdd(filePreviousLineNum, files.get(fileLineNumber),
                                 dirLines,
@@ -204,6 +208,13 @@ public class Part1 {
         }
     }
 
+    /**
+     * This function sets the directories. It sets the directory names for the
+     * various directories. It then reads the directories and stores the data in
+     * the various data structures. It also sets the file names for the various
+     * output files.
+     * 
+     */
     private static void addFirstChildrenToDirectories() {
         // loop over files again, look for files that are first children, then start
         // while loop, keep on adding to the parent directory
