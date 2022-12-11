@@ -28,73 +28,26 @@ public class Part1 {
     private static TreeMap<Integer, FileType> files = new TreeMap<>();
 
     public static void main(String[] args) throws FileNotFoundException {
+        File file = getFile();
+        parseLines(file);
+        setTopLevelDirectories();
+        setFiles();
+        addFirstChildrenToDirectories();
+    }
+
+    /**
+     * This method gets the input file
+     *
+     * @return the input file
+     */
+    public static File getFile() {
         // Create a File object that represents the disk file.
         File file = new File("C:\\Users\\achar\\OneDrive\\Documents\\GitHub\\AdventOfCode2022\\Day7\\input.txt");
-        parseLines(file);
-
-        setTopLevelDirectories();
-
-        // Iterate over the files in the TreeMap using the line numbers as the keys
-        for (int lineNumber : files.keySet()) {
-            int previousLineNum = lineNumber - 1;
-            boolean firstFileFound = findParentDirectoryAndAdd(previousLineNum, files.get(lineNumber), dirLines,
-                    commandLines,
-                    files);
-            // validate
-            // System.out.println("File: " + files.get(lineNumber).filename + " Size: " + files.get(lineNumber).size);
-            if (firstFileFound) {
-                // do the same thing as for directories below, but for the files
-                boolean fileFound = true;
-                int fileLineNumber = lineNumber;
-                while (fileFound) {
-                    if (files.containsKey(fileLineNumber + 1)) {
-                        // set first child to true
-                        files.get(fileLineNumber + 1).isFirstChild = true;
-                        fileLineNumber++;
-                        // validate
-                        //System.out.println("File: " + files.get(fileLineNumber).filename + " Size: "
-                        //        + files.get(fileLineNumber).size);
-                        int filePreviousLineNum = fileLineNumber - 1;
-                        boolean check = findParentDirectoryAndAdd(filePreviousLineNum, files.get(fileLineNumber),
-                                dirLines,
-                                commandLines, files);
-                        if (check) {
-                            totalFileSize += files.get(fileLineNumber).size;
-                            continue;
-                        }
-                    } else {
-                        fileFound = false;
-                    }
-                }
-            } /*
-               * else {
-               * if (files.containsKey(previousLineNum)) {
-               * findDirParentAndAdd(previousLineNum, files.get(lineNumber), dirLines,
-               * commandLines, files);
-               * System.out.println("recursion");
-               * }
-               */
+        if (!file.exists() || !file.isFile()) {
+            System.out.println("File doesn't exist");
+            System.exit(1);
         }
-
-        // loop over files again, look for files that are first children, then start
-        // while loop, keep on adding to the parent directory
-        for (int lineNumber : files.keySet()) {
-            if (files.get(lineNumber).isFirstChild) {
-                int previousLineNum = lineNumber - 1;
-                boolean check = findParentDirectoryAndAdd(previousLineNum, files.get(lineNumber), dirLines,
-                        commandLines,
-                        files);
-                if (check) {
-                    totalFileSize += files.get(lineNumber).size;
-                    continue;
-                }
-            }
-
-            // validate
-            // System.out.println("File: " + files.get(lineNumber).filename + " Size: " +
-            // files.get(lineNumber).size);
-        }
-
+        return file;
     }
 
     /**
@@ -212,6 +165,61 @@ public class Part1 {
                * }
                * }
                */
+        }
+    }
+
+    private static void setFiles() {
+        // Iterate over the files in the TreeMap using the line numbers as the keys
+        for (int lineNumber : files.keySet()) {
+            int previousLineNum = lineNumber - 1;
+            boolean firstFileFound = findParentDirectoryAndAdd(previousLineNum, files.get(lineNumber), dirLines,
+                    commandLines,
+                    files);
+            // validate
+            // System.out.println("File: " + files.get(lineNumber).filename + " Size: " +
+            // files.get(lineNumber).size);
+            if (firstFileFound) {
+                // do the same thing as for directories below, but for the files
+                boolean fileFound = true;
+                int fileLineNumber = lineNumber;
+                while (fileFound) {
+                    if (files.containsKey(fileLineNumber + 1)) {
+                        // set first child to true
+                        files.get(fileLineNumber + 1).isFirstChild = true;
+                        fileLineNumber++;
+                        // validate
+                        // System.out.println("File: " + files.get(fileLineNumber).filename + " Size: "
+                        // + files.get(fileLineNumber).size);
+                        int filePreviousLineNum = fileLineNumber - 1;
+                        boolean check = findParentDirectoryAndAdd(filePreviousLineNum, files.get(fileLineNumber),
+                                dirLines,
+                                commandLines, files);
+                        if (check) {
+                            totalFileSize += files.get(fileLineNumber).size;
+                            continue;
+                        }
+                    } else {
+                        fileFound = false;
+                    }
+                }
+            }
+        }
+    }
+
+    private static void addFirstChildrenToDirectories() {
+        // loop over files again, look for files that are first children, then start
+        // while loop, keep on adding to the parent directory
+        for (int lineNumber : files.keySet()) {
+            if (files.get(lineNumber).isFirstChild) {
+                int previousLineNum = lineNumber - 1;
+                boolean check = findParentDirectoryAndAdd(previousLineNum, files.get(lineNumber), dirLines,
+                        commandLines,
+                        files);
+                if (check) {
+                    totalFileSize += files.get(lineNumber).size;
+                    continue;
+                }
+            }
         }
     }
 }
