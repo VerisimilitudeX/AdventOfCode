@@ -8,7 +8,7 @@ public class Directory {
     public int parentDirectoryLineNum;
     public ArrayList<FileType> files;
     public ArrayList<Directory> subdirectories;
-    public boolean topLevel;
+    public boolean isTopLevel;
 
     public Directory() {
         this.name = "";
@@ -16,6 +16,6 @@ public class Directory {
         this.parentDirectoryLineNum = 0;
         this.files = new ArrayList<FileType>();
         this.subdirectories = new ArrayList<Directory>();
-        this.topLevel = false;
+        this.isTopLevel = false;
     }
 }

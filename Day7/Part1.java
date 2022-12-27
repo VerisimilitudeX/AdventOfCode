@@ -29,7 +29,21 @@ public class Part1 {
         parseLines(getFile());
         setTopLevelDirectories();
         setFiles();
-        addFirstChildrenToDirectories();
+        //addFirstChildrenToDirectories();
+        // 2 for loops to traverse dirLines
+        for (int lineNumber : dirLines.keySet()) {
+            // if dir is top level, print it
+            if (dirLines.get(lineNumber).isTopLevel) {
+                System.out.println(dirLines.get(lineNumber).name + " " + dirLines.get(lineNumber).size);
+                // for loop to traverse files
+                for (FileType file : dirLines.get(lineNumber).files) {
+                    // if file is first child, print it
+                    if (file.isFirstChild) {
+                        System.out.println("    " + file.filename + " " + file.size);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -100,9 +114,11 @@ public class Part1 {
      * @return false if the file is not added to a directory, true if the file is
      *         added
      */
-    private static boolean findParentDirectoryAndAdd(int previousLineNum, FileType file,
+    private static boolean findParentDirectoryAndAdd(
+            int previousLineNum, 
+            FileType file,
             TreeMap<Integer, Directory> dirLines,
-            TreeMap<Integer, String> commandLines, TreeMap<Integer, FileType> files) {
+            TreeMap<Integer, String> commandLines) {
         // check if previous line is a dir
         if (dirLines.containsKey(previousLineNum)) {
             // add file to dir
@@ -112,24 +128,12 @@ public class Part1 {
             // mark file as first child of dir
             file.isFirstChild = true;
             return true;
-        } else {
-            // if previous line is not a command, keep going up 1 line until its found
-            boolean notFound = true;
-            while (notFound) {
-                if (dirLines.containsKey(previousLineNum)) {
-                    // add file to dir
-                    dirLines.get(previousLineNum).files.add(file);
-                    // update size of dir
-                    dirLines.get(previousLineNum).size += file.size;
-                    // mark file as first child of dir
-                    file.isFirstChild = true;
-                    notFound = false;
-                    return true;
-                } else {
-                    previousLineNum--;
-                }
-            }
         }
+        else if (commandLines.containsKey(previousLineNum))
+        {
+            return true;
+        }
+
         return false;
     }
 
@@ -138,7 +142,7 @@ public class Part1 {
         // if dir is found that is top level, designate it also as a top level directory
         for (int lineNumber : dirLines.keySet()) {
             if (commandLines.containsKey(lineNumber - 1)) {
-                dirLines.get(lineNumber).topLevel = true;
+                dirLines.get(lineNumber).isTopLevel = true;
                 // validate
                 System.out.println("Top level directory: " + dirLines.get(lineNumber).name);
 
@@ -147,7 +151,7 @@ public class Part1 {
                 int dirLineNumber = lineNumber;
                 while (dirFound) {
                     if (dirLines.containsKey(dirLineNumber + 1)) {
-                        dirLines.get(dirLineNumber + 1).topLevel = true;
+                        dirLines.get(dirLineNumber + 1).isTopLevel = true;
                         // validate
                         System.out.println("Top level directory: " + dirLines.get(dirLineNumber + 1).name);
                         dirLineNumber++;
@@ -176,8 +180,7 @@ public class Part1 {
         for (int lineNumber : files.keySet()) {
             int previousLineNum = lineNumber - 1;
             boolean firstFileFound = findParentDirectoryAndAdd(previousLineNum, files.get(lineNumber), dirLines,
-                    commandLines,
-                    files);
+                    commandLines);
             // validate
             System.out.println("File: " + files.get(lineNumber).filename + " Size: " + files.get(lineNumber).size);
             if (firstFileFound) {
@@ -185,22 +188,27 @@ public class Part1 {
                 boolean fileFound = true;
                 int fileLineNumber = lineNumber;
                 while (fileFound) {
-                    if (files.containsKey(fileLineNumber + 1)) {
+                    int nextFileLineNumber = fileLineNumber + 1;
+                    if (files.containsKey(nextFileLineNumber)) 
+                    {
+                        FileType nextFile = files.get(nextFileLineNumber);
+
                         // set first child to true
-                        files.get(fileLineNumber + 1).isFirstChild = true;
-                        fileLineNumber++;
+                        nextFile.isFirstChild = true;
+
                         // validate
-                        System.out.println("File: " + files.get(fileLineNumber).filename + " Size: "
-                                + files.get(fileLineNumber).size);
+                        System.out.println("File: " + nextFile.filename + " Size: "
+                                + nextFile.size);
                         int filePreviousLineNum = fileLineNumber - 1;
-                        boolean check = findParentDirectoryAndAdd(filePreviousLineNum, files.get(fileLineNumber),
-                                dirLines,
-                                commandLines, files);
-                        if (check) {
-                            totalFileSize += files.get(fileLineNumber).size;
-                            continue;
-                        }
-                    } else {
+                        findParentDirectoryAndAdd(
+                            filePreviousLineNum,
+                            nextFile,
+                            dirLines,
+                            commandLines);
+                        fileLineNumber++;
+                    } 
+                    else 
+                    {
                         fileFound = false;
                     }
                 }
@@ -214,7 +222,7 @@ public class Part1 {
      * the various data structures. It also sets the file names for the various
      * output files.
      * 
-     */
+
     private static void addFirstChildrenToDirectories() {
         // loop over files again, look for files that are first children, then start
         // while loop, keep on adding to the parent directory
@@ -230,5 +238,5 @@ public class Part1 {
                 }
             }
         }
-    }
+    }   */
 }
