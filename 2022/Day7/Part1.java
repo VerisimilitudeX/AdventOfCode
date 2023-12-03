@@ -19,7 +19,6 @@ import java.util.TreeMap;
 import java.util.Scanner;
 
 public class Part1 {
-    private static int totalFileSize = 0;
     private static ArrayList<String> input = new ArrayList<String>();
     private static TreeMap<Integer, String> commandLines = new TreeMap<>();
     private static TreeMap<Integer, Directory> dirLines = new TreeMap<>();
@@ -71,14 +70,15 @@ public class Part1 {
      * @throws FileNotFoundException
      */
     public static void parseLines(File file) throws FileNotFoundException {
-        // Create a Scanner object for the file.
-        Scanner sc = new Scanner(file);
-
-        // Read the file contents into the ArrayList
-        while (sc.hasNext()) {
-            String thisLine = sc.nextLine();
-            input.add(thisLine);
+        try (// Create a Scanner object for the file.
+        Scanner sc = new Scanner(file)) {
+            // Read the file contents into the ArrayList
+            while (sc.hasNext()) {
+                String thisLine = sc.nextLine();
+                input.add(thisLine);
+            }
         }
+
         // Recognize lines that contain a command ($)
         for (int i = 0; i < input.size(); i++) {
             if (input.get(i).charAt(0) == '$') {
