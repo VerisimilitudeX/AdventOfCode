@@ -4,7 +4,7 @@ import java.util.*;
 
 public class CalibrationValuePart2 {
     public static void main(String[] args) throws FileNotFoundException {
-        File input = new File("2023\\Day 1\\input.txt");
+        File input = new File("2023/Day 1/input.txt");
         Scanner sc = new Scanner(input);
 
         ArrayList<Integer> addList = new ArrayList<>();
